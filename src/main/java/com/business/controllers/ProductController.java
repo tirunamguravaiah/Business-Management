@@ -1,48 +1,46 @@
 package com.business.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 
 import com.business.entities.Product;
 import com.business.services.ProductServices;
 
 @Controller
-public class ProductController 
-{
-	@Autowired
-	private ProductServices productServices;
+@RequestMapping("/product")
+public class ProductController {
 
-	//	AddProduct
-	@PostMapping("/addingProduct")
-	public String addProduct(@ModelAttribute Product product)
-	{
+    @Autowired
+    private ProductServices productServices;
 
-		this.productServices.addProduct(product);
-		return "redirect:/admin/services";
-	}
+    // 🟩 Add Product
+    @PostMapping("/add")
+    public String addProduct(@ModelAttribute Product product) {
+        this.productServices.addProduct(product);
+        return "redirect:/admin/services";
+    }
 
-	//	UpdateProduct
-	@GetMapping("/updatingProduct/{productId}")
-	public String updateProduct(@ModelAttribute Product product,@PathVariable("productId") int id)
-	{
+    // 🟩 Show Update Product Page
+    @GetMapping("/edit/{productId}")
+    public String editProduct(@PathVariable("productId") String id, Model model) {
+        Product product = this.productServices.getProduct(id);
+        model.addAttribute("product", product);
+        return "Update_Product";
+    }
 
-		this.productServices.updateproduct(product, id);
-		return "redirect:/admin/services";
-	}
-	//DeleteProduct
-	@GetMapping("/deleteProduct/{productId}")
-	public String delete(@PathVariable("productId") int id)
-	{
-		this.productServices.deleteProduct(id);
-		return "redirect:/admin/services";
-	}
-	
+    // 🟩 Update Product
+    @PostMapping("/update/{productId}")
+    public String updateProduct(@ModelAttribute Product product, @PathVariable("productId") String id) {
+        this.productServices.updateProduct(product, id);
+        return "redirect:/admin/services";
+    }
+
+    // 🟩 Delete Product
+    @GetMapping("/delete/{productId}")
+    public String deleteProduct(@PathVariable("productId") String id) {
+        this.productServices.deleteProduct(id);
+        return "redirect:/admin/services";
+    }
 }

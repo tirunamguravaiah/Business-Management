@@ -1,10 +1,10 @@
 package com.business.repositories;
 
-import org.springframework.data.repository.CrudRepository;
-
+import org.springframework.data.mongodb.repository.MongoRepository;
 import com.business.entities.Admin;
 
-public interface AdminRepository extends CrudRepository<Admin, Integer>
-{
-	public Admin findByAdminEmail(String email);
+public interface AdminRepository extends MongoRepository<Admin, String> {
+
+    // Custom query method (same as before)
+    Admin findByAdminEmail(String email);
 }

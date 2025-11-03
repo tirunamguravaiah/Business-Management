@@ -1,13 +1,12 @@
 package com.business.repositories;
 
 import java.util.List;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
+import org.springframework.data.mongodb.repository.MongoRepository;
 import com.business.entities.Orders;
 import com.business.entities.User;
 
-public interface OrderRepository extends JpaRepository<Orders, Integer>
-{
-	List<Orders> findOrdersByUser(User user);
+public interface OrderRepository extends MongoRepository<Orders, String> {
+
+    // Custom query method to find all orders by a specific user
+    List<Orders> findOrdersByUser(User user);
 }
