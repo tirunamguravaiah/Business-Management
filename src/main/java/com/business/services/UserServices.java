@@ -4,71 +4,53 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import com.business.entities.Admin;
 import com.business.entities.User;
 import com.business.repositories.UserRepository;
-@Component
-public class UserServices 
-{
-	@Autowired
-	private UserRepository userRepository;
-		
-	//Get All Users
-	public List<User> getAllUser()
-	{
-		List<User> users = (List<User>) this.userRepository.findAll();
-		return users;
-	}
-	
-	//Get Single User
-	public User getUser(int id)
-	{
-		Optional<User> optional = this.userRepository.findById(id);
-		User user = optional.get();
-		return user;
-	}
-	
-	//Get Single User By Email
-	public User getUserByEmail(String email)
-	{
-	 User user=	this.userRepository.findUserByUemail(email);
-	 return user;
-	}
-	
-	//Update
-	public void updateUser(User user,int id)
-	{
-		user.setU_id(id);
-		 this.userRepository.save(user);
-	}
-	
-	//delete single User
-	public void deleteUser(int id)
-	{
-		this.userRepository.deleteById(id);
-	}
 
-	//Add User
-	public void addUser(User user)
-	{
-	this.userRepository.save(user);
-	}
-	
-	public boolean validateLoginCredentials(String email,String password)
-	{
-		List<User> users = (List<User>) this.userRepository.findAll();
-		for(User u:users)
-		{
-		if(u!=null && u.getUpassword().equals(password) && u.getUemail().equals(email))
-		{
-			return true;
-		}
-		}
-		return false;
-	}
-	
-	
+@Service
+public class UserServices {
 
+    @Autowired
+    private UserRepository userRepository;
+
+    // Get all users
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    // Get single user by ID
+    public User getUser(String id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    // Get single user by email
+    public User getUserByEmail(String email) {
+        return userRepository.findUserByUemail(email);
+    }
+
+    // Add new user
+    public void addUser(User user) {
+        userRepository.save(user);
+    }
+
+    // Update user
+    public void updateUser(User user, String id) {
+        if (userRepository.existsById(id)) {
+            user.setU_id(id);
+            userRepository.save(user);
+        }
+    }
+
+    // Delete user
+    public void deleteUser(String id) {
+        userRepository.deleteById(id);
+    }
+
+    // Validate login credentials
+    public boolean validateLoginCredentials(String email, String password) {
+        User user = userRepository.findUserByUemail(email);
+        return user != null && user.getUpassword().equals(password);
+    }
 }

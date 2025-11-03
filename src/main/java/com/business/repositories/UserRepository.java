@@ -1,11 +1,10 @@
 package com.business.repositories;
 
-import org.springframework.data.repository.CrudRepository;
-
-import com.business.entities.Admin;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import com.business.entities.User;
 
-public interface UserRepository extends CrudRepository<User,Integer>
-{
-public User findUserByUemail(String email);
+public interface UserRepository extends MongoRepository<User, String> {
+
+    // Custom query method to find user by email
+    User findUserByUemail(String email);
 }
